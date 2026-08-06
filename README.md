@@ -10,11 +10,11 @@ By the end I had Domain Administrator access and every password hash in the doma
 
 ---
 
-## What I was trying to do
+## About this project
 
 Active Directory runs most corporate networks, and it's usually the main target in a real breach — once you're Domain Admin, you basically own the company's IT. This lab walks through a realistic attack chain against a DC (Domain Controller), using nothing but built-in AD weaknesses. No exploits, no malware, just abusing how Kerberos and SMB are designed to work.
 
-## Tools I used
+## Tools used
 
 Nmap, Kerbrute, Impacket (`GetNPUsers`, `secretsdump`), John the Ripper, smbclient, CrackMapExec
 
@@ -151,24 +151,24 @@ Whole thing took under two hours, and every step fed directly into the next one.
 
 ## Why this matters
 
-None of this needed a zero-day or clever exploit — it's entirely built out of everyday AD misconfigurations:
+None of this required a zero-day or anything clever — just everyday AD misconfigurations stacked on top of each other:
 
 - A service account with Kerberos pre-auth switched off
 - A weak, guessable password
-- Credentials left in a plaintext file on a network share
-- An account with far more replication rights than it should have had
-- NTLM still being accepted at all
+- Credentials sitting in a plaintext file on a network share
+- An account with way more replication rights than it needed
+- NTLM still being accepted
 
-This is basically how real-world domain compromises happen. Attackers rarely need a fancy exploit when the environment itself hands them the keys.
+This is pretty much how real domain compromises happen. Attackers don't usually need a fancy exploit — misconfigurations like these hand them everything.
 
-## What I'd tell a defender to fix
+## Fixes for a real environment
 
-- Turn on Kerberos pre-authentication for every account, and actually audit for accounts where it's disabled
-- Enforce real password complexity, especially for service accounts — these get forgotten and never rotated
-- Never leave credentials in plaintext on a share — use a proper secrets manager
-- Lock down who has DCSync/replication rights — it should really just be domain controllers and actual domain admins
-- Turn off NTLM where you can, and at minimum log/alert on its use
-- Set up alerting for DCSync-style requests coming from anything that isn't a real DC — tools like Microsoft Defender for Identity catch this well
+- Enable Kerberos pre-authentication everywhere, and actually audit for accounts where it's off
+- Enforce real password policies for service accounts — these are the ones that get set up once and forgotten
+- Stop storing credentials in plaintext on shares — use a proper secrets manager instead
+- Restrict DCSync/replication rights to domain controllers and real domain admins only
+- Disable NTLM where possible, and log/alert on it where you can't
+- Monitor for DCSync-style requests coming from anything that isn't an actual DC — Defender for Identity or similar tools catch this well
 
 ---
 
