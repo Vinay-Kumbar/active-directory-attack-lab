@@ -149,6 +149,22 @@ Full domain compromise, confirmed.
 
 Whole thing took under two hours, and every step fed directly into the next one.
 
+## MITRE ATT&CK Mapping
+
+Every step of this attack chain mapped to its official MITRE ATT&CK technique, for anyone reviewing this from a detection/threat-informed defense perspective.
+
+| Attack Step | MITRE ATT&CK Technique | ID | Tactic |
+|---|---|---|---|
+| Kerbrute username enumeration | Account Discovery: Domain Account | [T1087.002](https://attack.mitre.org/techniques/T1087/002/) | Discovery |
+| AS-REP Roasting | Steal or Forge Kerberos Tickets: AS-REP Roasting | [T1558.004](https://attack.mitre.org/techniques/T1558/004/) | Credential Access |
+| Offline hash cracking (John the Ripper) | Brute Force: Password Cracking | [T1110.002](https://attack.mitre.org/techniques/T1110/002/) | Credential Access |
+| SMB share enumeration (CrackMapExec) | Network Share Discovery | [T1135](https://attack.mitre.org/techniques/T1135/) | Discovery |
+| Credentials found in a file on a share | Unsecured Credentials: Credentials In Files | [T1552.001](https://attack.mitre.org/techniques/T1552/001/) | Credential Access |
+| DCSync attack (Impacket secretsdump) | OS Credential Dumping: DCSync | [T1003.006](https://attack.mitre.org/techniques/T1003/006/) | Credential Access |
+| Pass-the-Hash login as Administrator | Use Alternate Authentication Material: Pass the Hash | [T1550.002](https://attack.mitre.org/techniques/T1550/002/) | Defense Evasion, Lateral Movement |
+
+Mapping the full chain this way makes it possible to trace each step back to a defender-recognized technique — useful for anyone building detections against this exact attack path.
+
 ## Why this matters
 
 None of this required a zero-day or anything clever — just everyday AD misconfigurations stacked on top of each other:
