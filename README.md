@@ -1,4 +1,4 @@
-# Active Directory Lab Attack
+# Active Directory Lab Attac
 
 This is my third cybersecurity project, where I went after a full Active Directory environment instead of a single host. The goal was simple: start with nothing (no creds, no access) and see how far I could get inside a Windows domain using only misconfigurations that show up constantly in real environments.
 
